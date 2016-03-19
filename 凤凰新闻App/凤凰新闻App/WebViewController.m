@@ -1,0 +1,96 @@
+//
+//  WebViewController.m
+//  凤凰新闻App
+//
+//  Created by lanou on 16/3/18.
+//  Copyright © 2016年 jianjun. All rights reserved.
+//
+
+#import "WebViewController.h"
+#import "Header.h"
+@interface WebViewController ()
+
+@end
+
+@implementation WebViewController
+
+-(instancetype)initWithUrlstr:(NSString *)url
+{
+    if (self) {
+        _urlStr = url;
+    }
+    return self;
+}
+
+-(UIWebView *)webView
+{
+    if (!_webView) {
+        
+        _webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 20, W, H - 88)];
+    }
+    return _webView;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    NSURL *url = [NSURL URLWithString:self.urlStr];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    
+    [self.webView loadRequest:request];
+    
+  
+
+    [self.view addSubview:self.webView];
+    
+//    [self.webView setScalesPageToFit:YES];
+    
+    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, H - 88, W, 44)];
+    downView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:downView];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    backButton.frame = CGRectMake(0, downView.bounds.size.height - 44, 40, 44);
+    [backButton setImage:[UIImage imageNamed:@"新向左.png"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    [downView addSubview:backButton];
+    
+    UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    shareButton.frame = CGRectMake(W - 60, 0, 60, 44);
+    [shareButton setImage:[UIImage imageNamed:@"新分享.png"] forState:UIControlStateNormal];
+    [shareButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    [downView addSubview:shareButton];
+    
+}
+
+-(void)back:(UIButton *)sender
+{
+    [self.webView goBack];
+    if (![self.webView canGoBack]) {
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
+}
+
+-(void)share:(UIButton *)sender
+{
+    
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

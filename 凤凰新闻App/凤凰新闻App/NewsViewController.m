@@ -8,29 +8,21 @@
 
 #import "NewsViewController.h"
 #import "AddTitleViewController.h"
+#import "HeadlinesViewController.h"
 #import "HeadView.h"
 #import "Header.h"
-@interface NewsViewController ()
+@interface NewsViewController ()<changeArray,changeScrollViewOffset,UIScrollViewDelegate>
 
 @property (nonatomic,strong)HeadView *headView;
 
 @property (nonatomic,strong)NSMutableArray *titleArray;
 
+@property (nonatomic,strong)AddTitleViewController *addTitle;
+
 @end
 
 @implementation NewsViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    self.navigationController.navigationBarHidden = YES;
-    NSArray *array = @[@"历史",@"头条",@"科技",@"美女",@"体育",@"军事",@"房产"];
-    self.titleArray = [NSMutableArray arrayWithArray:array];
-    
-    [self initHeadView];
-}
 
 
 -(HeadView *)headView
@@ -38,37 +30,112 @@
     if (!_headView) {
         _headView = [[HeadView alloc]initWithFrame:CGRectMake(0, 20, W, 44)];
     }
+    
     return _headView;
 }
 
+-(UIScrollView *)baseScrollView
+{
+    if (!_baseScrollView) {
+        _baseScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, W, H - 108)];
+    }
+    return _baseScrollView;
+}
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    self.navigationController.navigationBarHidden = YES;
+    
+    
+    
+    
+    [self initHeadView];
+    
+    
+    
+    self.baseScrollView.pagingEnabled = YES;
+    
+    [self.baseScrollView setBounces:NO];
+    
+    self.baseScrollView.delegate = self;
+    
+    [self.view insertSubview:self.baseScrollView belowSubview:self.addTitle.view];
+
+    HeadlinesViewController *headlines = [[HeadlinesViewController alloc] init];
+    
+    headlines.headView = self.headView;
+    
+    [self addChildViewController:headlines];
+    
+    [self.baseScrollView addSubview:headlines.view];
+    
+}
+
+
 -(void)initHeadView
 {
+    self.headView.delegate = self;
+    
     [self.view addSubview:self.headView];
     
-    [self.headView setTitleWithArray:self.titleArray];
+    self.addTitle = [[AddTitleViewController alloc]init];
+    
+    [self addChildViewController:self.addTitle];
+    
+    self.addTitle.view.hidden = YES;
+    
+    [self.view addSubview:self.addTitle.view];
+    
+    
+
+    [self changeArray];
     
     [self.headView.plusButton addTarget:self action:@selector(plusButton:) forControlEvents:UIControlEventTouchUpInside];
     
     
 }
 
+
+//自定义代理方法
+-(void)changeArray
+{
+    [self.headView setTitleWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedArray"]];
+    
+    self.baseScrollView.contentSize = CGSizeMake(W * [[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedArray"] count], 0);
+}
+
 -(void)plusButton:(UIButton *)sender
 {
-    AddTitleViewController *addTitle = [[AddTitleViewController alloc]init];
-    
-    [self addChildViewController:addTitle];
-    
-    addTitle.view.hidden = NO;
-    
-    [self.view addSubview:addTitle.view];
+    self.addTitle.delegate = self;
+    self.addTitle.view.hidden = NO;
     
     [UIView animateWithDuration:1. animations:^{
         
-        addTitle.collectionView.frame = CGRectMake(0, 50, W, H - 164);
+        self.addTitle.collectionView.frame = CGRectMake(0, 44, W, H - 158);
         
-        addTitle.upButton.frame = CGRectMake(0, H - 114, W, 50);
+        self.addTitle.upButton.frame = CGRectMake(0, H - 114, W, 50);
+        
+        self.addTitle.headerView.alpha = 1.;
     }];
 }
+
+
+-(void)setOffsetNumber:(NSInteger)page
+{
+    [self.baseScrollView setContentOffset:CGPointMake(W * page, 0)animated:NO];
+}
+
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSInteger page = scrollView.contentOffset.x / W;
+    [self.headView setTitleScrollViewOffsetWithPage:page];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

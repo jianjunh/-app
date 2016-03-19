@@ -10,7 +10,7 @@
 #import "Header.h"
 @implementation HeadView
 {
-    CGFloat _itemWidth;
+    
     UIView *_underLine;
 }
 -(instancetype)initWithFrame:(CGRect)frame
@@ -24,6 +24,7 @@
         _titleScrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
         
         [self setConfiguration];
+        
         
     }
     return self;
@@ -65,15 +66,20 @@
 -(void)setTitleWithArray:(NSArray *)titleArray
 {
     _itemWidth = (W - 88) / 5;
-    
     self.titleScrollView.frame = CGRectMake(44, 0, W - 88, 44);
     self.titleScrollView.showsHorizontalScrollIndicator = NO;
+    
     self.titleScrollView.contentSize = CGSizeMake(_itemWidth * [titleArray count], 0);
     
-    [self addSubview:self.titleScrollView];
     
-    for (int i = 0; i < [titleArray count]; i++) {
+    if ([[self.titleScrollView subviews] count] != 0) {
+        for (id view in [self.titleScrollView subviews]) {
+            [view removeFromSuperview];
+        }
+    }
         
+    for (int i = 0; i < [titleArray count]; i++) {
+            
         UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
         
         titleButton.frame = CGRectMake(i * _itemWidth, 0, _itemWidth, 44);
@@ -89,18 +95,22 @@
         
         if (titleButton.tag == 1000) {
             titleButton.selected = YES;
+            
         }
         
         [self.buttonArray addObject:titleButton];
         
         [self.titleScrollView addSubview:titleButton];
-        
+            
     }
-    _underLine = [[UIView alloc]initWithFrame:CGRectMake(0, 42, _itemWidth, 2)];
+        _underLine = [[UIView alloc]initWithFrame:CGRectMake(0, 42, _itemWidth, 2)];
+        
+        _underLine.backgroundColor = [UIColor redColor];
+        
+        [self.titleScrollView addSubview:_underLine];
+        
+        [self addSubview:self.titleScrollView];
     
-    _underLine.backgroundColor = [UIColor redColor];
-    
-    [self.titleScrollView addSubview:_underLine];
 }
 
 
@@ -112,12 +122,17 @@
 
 -(void)titleButton:(UIButton *)sender
 {
+    
     for (UIButton *btn in self.buttonArray) {
         if (sender.tag == btn.tag) {
             
             btn.selected = YES;
             
             _underLine.frame = CGRectMake((btn.tag - 1000) * _itemWidth, 42, _itemWidth, 2);
+            
+            [self.delegate setOffsetNumber:(btn.tag - 1000)];
+            
+            [self.OtherDelegate setButtonTitle:sender.titleLabel.text];
             
         }else{
             
@@ -126,4 +141,25 @@
         }
     }
 }
+
+-(void)setTitleScrollViewOffsetWithPage:(NSInteger)page
+{
+    
+    for (UIButton *btn in self.buttonArray) {
+        if (btn.tag == page + 1000) {
+            
+            btn.selected = YES;
+            
+            _underLine.frame = CGRectMake((btn.tag - 1000) * _itemWidth, 42, _itemWidth, 2);
+            
+            
+        }else{
+            
+            btn.selected = NO;
+            
+        }
+    }
+
+}
+
 @end

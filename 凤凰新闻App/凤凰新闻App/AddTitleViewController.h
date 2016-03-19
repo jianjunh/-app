@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+@protocol changeArray <NSObject>
+
+@optional
+-(void)changeArray;
+
+@end
 
 @interface AddTitleViewController : UIViewController
 
@@ -19,5 +25,11 @@
 @property (nonatomic,strong)UIView *headerView;
 
 @property (nonatomic,strong)UIButton *upButton;
+
+@property (nonatomic,strong)NSArray *selectedArray;
+
+@property (nonatomic,strong)NSArray *optionalArray;
+
+@property (nonatomic,assign)id<changeArray>delegate;
 
 @end

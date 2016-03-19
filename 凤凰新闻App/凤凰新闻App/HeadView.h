@@ -7,6 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+@protocol changeScrollViewOffset <NSObject>
+
+@optional
+
+-(void)setOffsetNumber:(NSInteger)page;
+
+@end
+
+@protocol setButtonTitle <NSObject>
+
+@optional
+
+-(void)setButtonTitle:(NSString *)buttonTitle;
+
+@end
 
 @interface HeadView : UIView
 
@@ -18,8 +33,18 @@
 
 @property (nonatomic,strong)NSMutableArray *buttonArray;
 
--(instancetype)initWithFrame:(CGRect)frame;
+@property (nonatomic,assign)id<changeScrollViewOffset>delegate;
+
+@property (nonatomic,assign)id<setButtonTitle>OtherDelegate;
+
+@property (nonatomic,assign)CGFloat itemWidth;
+
++(HeadView *)shareHeadView;
+
+-(void)setFrame:(CGRect)frame;
 
 -(void)setTitleWithArray:(NSArray *)titleArray;
+
+-(void)setTitleScrollViewOffsetWithPage:(NSInteger)page;
 
 @end

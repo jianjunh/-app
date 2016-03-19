@@ -10,11 +10,7 @@
 #import "TitleCollectionViewCell.h"
 #import "Header.h"
 @interface AddTitleViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
-{
-    NSMutableArray *_selectedArray;
-    NSMutableArray *_optionalArray;
-    
-}
+
 @end
 
 @implementation AddTitleViewController
@@ -30,7 +26,7 @@
 -(UIView *)headerView
 {
     if (!_headerView) {
-        _headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, W, 50)];
+        _headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, W, 44)];
     }
     return _headerView;
 }
@@ -54,9 +50,15 @@
     
     [self initHeaderView];
     
-    _selectedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"萌物",@"段子",@"哲思",@"直播",@"财经", nil];
-    
-    _optionalArray = [NSMutableArray arrayWithObjects:@"科技",@"美女",@"房产",@"国学",@"评论",@"暖新闻",@"旅游",@"公益",@"博报", nil];
+    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"selectedArray"] == nil) {
+        _selectedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"萌物",@"段子",@"哲思",@"直播",@"财经", nil];
+        
+        [[NSUserDefaults standardUserDefaults] setValue:_selectedArray forKey:@"selectedArray"];
+        
+        _optionalArray = [NSMutableArray arrayWithObjects:@"科技",@"美女",@"房产",@"国学",@"评论",@"暖新闻",@"旅游",@"公益",@"博报", nil];
+        [[NSUserDefaults standardUserDefaults]setValue:_optionalArray forKey:@"optionalArray"];
+        
+    }
     
     [self initCollectionView];
     
@@ -71,14 +73,14 @@
     [self.groundView addSubview:self.headerView];
     
     
-    UILabel *enterLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 150, 50)];
+    UILabel *enterLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 144, 44)];
     
     enterLabel.text = @"点击进入频道";
     
     [self.headerView addSubview:enterLabel];
     
     
-    self.editButton.frame = CGRectMake(W - 60, 0, 60, 50);
+    self.editButton.frame = CGRectMake(W - 60, 0, 60, 44);
     
     [self.editButton setTitle:@"编辑" forState:UIControlStateNormal];
     
@@ -104,7 +106,7 @@
     flowLayout.headerReferenceSize = CGSizeMake(0, 30);
     [flowLayout setSectionInset:UIEdgeInsetsMake(20, 20, 20, 20)];
     
-    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 50, W, 0)collectionViewLayout:flowLayout];
+    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 44, W, 0)collectionViewLayout:flowLayout];
     
     self.collectionView.backgroundColor = RGBA(240, 240, 240, 1);
     
@@ -161,9 +163,10 @@
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if(section == 0){
-        return [_selectedArray count];
+        
+        return [[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedArray"] count];
     }else{
-        return [_optionalArray count];
+        return [[[NSUserDefaults standardUserDefaults] objectForKey:@"optionalArray"] count];
     }
 }
 
@@ -174,9 +177,9 @@
         if (indexPath.row == 0) {
             cell.titleLabel.textColor = [UIColor redColor];
         }
-        cell.titleLabel.text = [_selectedArray objectAtIndex:indexPath.row];
+        cell.titleLabel.text = [[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedArray"] objectAtIndex:indexPath.row];
     }else{
-        cell.titleLabel.text = [_optionalArray objectAtIndex:indexPath.row];
+        cell.titleLabel.text = [[[NSUserDefaults standardUserDefaults] objectForKey:@"optionalArray"] objectAtIndex:indexPath.row];
         
     }
     
@@ -186,23 +189,35 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSMutableArray *optionalArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"optionalArray"]];
+    NSMutableArray *selectedArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedArray"]];
     if (indexPath.section == 0) {
         if (self.editButton.selected == YES) {
             if(indexPath.row != 0){
-                [_optionalArray addObject:[_selectedArray objectAtIndex:indexPath.row]];
                 
-                [_selectedArray removeObjectAtIndex:indexPath.row];
                 
-                [collectionView reloadData];
+                [optionalArray addObject:[selectedArray objectAtIndex:indexPath.row]];
+                
+                [selectedArray removeObjectAtIndex:indexPath.row];
+                
+                
             }else{
                 return;
             }
         }
     }else{
-        [_selectedArray addObject:[_optionalArray objectAtIndex:indexPath.row]];
-        [_optionalArray removeObject:[_optionalArray objectAtIndex:indexPath.row]];
-        [collectionView reloadData];
+        [selectedArray addObject:[optionalArray objectAtIndex:indexPath.row]];
+        [optionalArray removeObject:[optionalArray objectAtIndex:indexPath.row]];
+        
     }
+    NSArray *optionalArray1 = [NSArray arrayWithArray:optionalArray];
+    [[NSUserDefaults standardUserDefaults] setValue:optionalArray1 forKey:@"optionalArray"];
+    
+    NSArray *selectedArray1 = [NSArray arrayWithArray:selectedArray];
+    [[NSUserDefaults standardUserDefaults] setValue:selectedArray1 forKey:@"selectedArray"];
+    
+    
+    [collectionView reloadData];
 }
 
 -(void)initUpButton
@@ -224,15 +239,17 @@
 {
     [UIView animateWithDuration:1. animations:^{
         
-        self.collectionView.frame = CGRectMake(0, 50, W, 0);
+        self.collectionView.frame = CGRectMake(0, 44, W, 0);
         
-        self.upButton.frame = CGRectMake(0, 50, W, 0);
+        self.upButton.frame = CGRectMake(0, 44, W, 0);
         
-        
+        self.headerView.alpha = 0;
     }completion:^(BOOL finished) {
-        self.headerView.hidden = YES;
+        
         self.view.hidden = YES;
     }];
+    [self.delegate changeArray];
+
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

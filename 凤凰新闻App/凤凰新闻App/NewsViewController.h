@@ -10,4 +10,6 @@
 
 @interface NewsViewController : UIViewController
 
+@property (nonatomic,strong)UIScrollView *baseScrollView;
+
 @end
