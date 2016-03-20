@@ -22,5 +22,9 @@
 
 @property (nonatomic,strong)NSString *commentsUrl;
 
+@property (nonatomic,strong)NSDictionary *liveExt;
+
+@property (nonatomic,strong)NSString *doc;
+
 -(instancetype)initWithDictionary:(NSDictionary *)dic;
 @end

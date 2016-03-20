@@ -26,11 +26,12 @@
         
         [self.contentView addSubview:_titleLabel];
         
-        _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 70, 50, 20)];
+        _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 70, 90, 20)];
+        _timeLabel.textAlignment = NSTextAlignmentLeft;
         
         [self.contentView addSubview:_timeLabel];
         
-        _commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(W - 80, 70, 50, 20)];
+        _commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(W - 100, 70, 70, 20)];
         
         _commentLabel.textAlignment = NSTextAlignmentRight;
         
@@ -49,9 +50,27 @@
     [self.ImageView sd_setImageWithURL:[NSURL URLWithString:headlinesModel.thumbnail]];
     
     self.titleLabel.text = headlinesModel.title;
-    
-    self.timeLabel.text = [headlinesModel.updateTime substringWithRange:NSMakeRange(11, 5)];
-    
+    if ([headlinesModel.type isEqualToString:@"text_live"]) {
+        self.commentImageView.hidden = YES;
+        if ([[headlinesModel.liveExt objectForKey:@"status"] isEqualToString:@"2"]) {
+            self.timeLabel.text = @"直播中";
+            self.timeLabel.textColor = [UIColor redColor];
+        }else{
+            self.timeLabel.textColor = [UIColor grayColor];
+            self.timeLabel.text = @"直播已结束";
+        }
+    }else if([headlinesModel.type isEqualToString:@"topic2"]){
+        self.timeLabel.text = @"专题";
+        self.timeLabel.frame = CGRectMake(110, 70, 35, 20);
+        self.timeLabel.textColor = [UIColor whiteColor];
+        self.timeLabel.backgroundColor = [UIColor redColor];
+    }else {
+        self.commentImageView.hidden = NO;
+        self.timeLabel.text = [headlinesModel.updateTime substringWithRange:NSMakeRange(11, 5)];
+        self.timeLabel.textColor = [UIColor blackColor];
+        self.timeLabel.backgroundColor = [UIColor whiteColor];
+        self.timeLabel.frame = CGRectMake(110, 70, 90, 20);
+    }
     self.commentLabel.text = headlinesModel.commentsall;
 }
 - (void)awakeFromNib {

@@ -16,9 +16,6 @@
 
 #define HeadLindeURL @"http://api.iclient.ifeng.com/ClientNews?id=SYLB10,SYDT10,SYRECOMMEND&page=1"
 #define EntertainmentURL @"http://api.iclient.ifeng.com/ClientNews?id=YL53,FOCUSYL53&page=1"
-#define MengwuURL @"http://api.iclient.ifeng.com/clientShortNews?type=pet&page=1"
-#define DuanziURL @"http://api.3g.ifeng.com/clientShortNews?type=joke&page=1"
-#define ZhesiURL @"http://api.iclient.ifeng.com/clientShortNews?type=phil&page=1"
 #define ZhiboURL @"http://api.iclient.ifeng.com/ClientNews?id=ZBPD&page=1"
 #define CaijingURL  @"http://api.iclient.ifeng.com/ClientNews?id=CJ33,FOCUSCJ33,HNCJ33&page=1"
 #define TechnologyURL @"http://api.iclient.ifeng.com/ClientNews?id=KJ123,FOCUSKJ123&page=1"

@@ -11,7 +11,7 @@
 #import "HeadlinesViewController.h"
 #import "HeadView.h"
 #import "Header.h"
-@interface NewsViewController ()<changeArray,changeScrollViewOffset,UIScrollViewDelegate>
+@interface NewsViewController ()<changeArray,setButtonTitle,changeScrollViewOffset,UIScrollViewDelegate>
 
 @property (nonatomic,strong)HeadView *headView;
 
@@ -67,18 +67,20 @@
 
     HeadlinesViewController *headlines = [[HeadlinesViewController alloc] init];
     
-    headlines.headView = self.headView;
     
     [self addChildViewController:headlines];
     
     [self.baseScrollView addSubview:headlines.view];
     
+    [headlines requestWithUrl:@"头条"];
 }
 
 
 -(void)initHeadView
 {
     self.headView.delegate = self;
+    
+    self.headView.OtherDelegate = self;
     
     [self.view addSubview:self.headView];
     
@@ -108,6 +110,23 @@
     self.baseScrollView.contentSize = CGSizeMake(W * [[[NSUserDefaults standardUserDefaults] valueForKey:@"selectedArray"] count], 0);
 }
 
+
+-(void)setButtonTitle:(NSString *)buttonTitle Tag:(NSInteger)tag
+{
+    HeadlinesViewController *headlines = [[HeadlinesViewController alloc]init];
+        
+    [self addChildViewController:headlines];
+    
+    
+    for (int i = 0; i < self.baseScrollView.contentSize.width; i++) {
+        if (i == tag - 1000) {
+            headlines.view.frame = CGRectMake(i * W, 0, W, self.baseScrollView.bounds.size.height);
+            [self.baseScrollView addSubview:headlines.view];
+        }
+    }
+    [headlines requestWithUrl:buttonTitle];
+}
+
 -(void)plusButton:(UIButton *)sender
 {
     self.addTitle.delegate = self;
@@ -115,7 +134,7 @@
     
     [UIView animateWithDuration:1. animations:^{
         
-        self.addTitle.collectionView.frame = CGRectMake(0, 44, W, H - 158);
+        self.addTitle.underView.frame = CGRectMake(0, 44, W, H - 158);
         
         self.addTitle.upButton.frame = CGRectMake(0, H - 114, W, 50);
         
@@ -130,12 +149,16 @@
 }
 
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
+
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     NSInteger page = scrollView.contentOffset.x / W;
     [self.headView setTitleScrollViewOffsetWithPage:page];
+    
+    NSLog(@"%@",[[[NSUserDefaults standardUserDefaults]objectForKey:@"selectedArray"] objectAtIndex:page]);
+    [self setButtonTitle:[[[NSUserDefaults standardUserDefaults]objectForKey:@"selectedArray"] objectAtIndex:page]  Tag:page + 1000];
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

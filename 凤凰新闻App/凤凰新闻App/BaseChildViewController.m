@@ -33,7 +33,6 @@
     [super viewDidLoad];
     
     
-    self.imageScrollView.backgroundColor = [UIColor greenColor];
     
     [self.imageScrollView setBounces:NO];
     
@@ -41,11 +40,9 @@
     
     [self.imageScrollView setShowsHorizontalScrollIndicator:NO];
     
-    self.tableView.tableHeaderView = self.imageScrollView;
+//    self.tableView.tableHeaderView = self.imageScrollView;
     
-//    [self.view addSubview:self.tableView];
     
-    self.tableView.backgroundColor = [UIColor grayColor];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -10,4 +10,6 @@
 
 @interface AudioViewController : UIViewController
 
+@property (nonatomic,strong)UIView *headerView;
+
 @end

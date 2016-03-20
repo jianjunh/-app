@@ -19,7 +19,7 @@
 
 @optional
 
--(void)setButtonTitle:(NSString *)buttonTitle;
+-(void)setButtonTitle:(NSString *)buttonTitle Tag:(NSInteger)tag;
 
 @end
 
@@ -39,9 +39,6 @@
 
 @property (nonatomic,assign)CGFloat itemWidth;
 
-+(HeadView *)shareHeadView;
-
--(void)setFrame:(CGRect)frame;
 
 -(void)setTitleWithArray:(NSArray *)titleArray;
 

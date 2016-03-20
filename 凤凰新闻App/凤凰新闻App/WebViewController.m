@@ -8,7 +8,9 @@
 
 #import "WebViewController.h"
 #import "Header.h"
-@interface WebViewController ()
+#import "UMSocialDataService.h"
+#import "UMSocial.h"
+@interface WebViewController ()<UMSocialUIDelegate>
 
 @end
 
@@ -44,7 +46,6 @@
 
     [self.view addSubview:self.webView];
     
-//    [self.webView setScalesPageToFit:YES];
     
     UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0, H - 88, W, 44)];
     downView.backgroundColor = [UIColor whiteColor];
@@ -76,6 +77,15 @@
 
 -(void)share:(UIButton *)sender
 {
+    [UMSocialSnsService presentSnsIconSheetView:self appKey:@"56d80bbb67e58ededb001b7c"                                      shareText:@"凤凰新闻的分享测试，www.umeng.com/social" shareImage:nil shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToWechatFavorite] delegate:self];
+    
+    [UMSocialData defaultData].extConfig.wechatSessionData.url = @"http://baidu.com";
+    
+    [UMSocialData defaultData].extConfig.wechatTimelineData.url = @"http://baidu.com";
+    [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+    
+    
+    
     
 }
 - (void)didReceiveMemoryWarning {

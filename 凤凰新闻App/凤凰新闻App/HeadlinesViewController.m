@@ -14,7 +14,7 @@
 #import "OneTableViewCell.h"
 #import "WebViewController.h"
 #import "HeadView.h"
-@interface HeadlinesViewController ()<UITableViewDataSource,UITableViewDelegate,changeScrollViewOffset,setButtonTitle>
+@interface HeadlinesViewController ()<UITableViewDataSource,UITableViewDelegate,changeScrollViewOffset>
 {
     NSMutableArray *_headlinesModelArray;
 //    NSMutableArray *_threeImageArray;
@@ -28,16 +28,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor redColor];
     _headlinesModelArray = [NSMutableArray array];
     
     
-    
-    self.headView.OtherDelegate = self;
-    
-    _titleDic  = [NSDictionary dictionaryWithObjectsAndKeys:HeadLindeURL,@"头条",EntertainmentURL,@"娱乐",MengwuURL,@"萌物",DuanziURL,@"段子",
-                  ZhesiURL,@"哲思",ZhiboURL,@"直播",CaijingURL,@"财经",TechnologyURL,@"科技",GirlURL,@"美女",FangchanURL,@"房产",GuoxueURL,@"国学",CommentURL,@"评论",NuanXinwenURL,@"暖新闻",TravelURL,@"旅行",Welfare,@"公益",Bobao,@"博报",nil];
-    [self requestWithUrl:@"头条"];
+    _titleDic  = [NSDictionary dictionaryWithObjectsAndKeys:HeadLindeURL,@"头条",EntertainmentURL,@"娱乐",ZhiboURL,@"直播",CaijingURL,@"财经",TechnologyURL,@"科技",GirlURL,@"美女",FangchanURL,@"房产",GuoxueURL,@"国学",CommentURL,@"评论",NuanXinwenURL,@"暖新闻",TravelURL,@"旅游",Welfare,@"公益",Bobao,@"博报",nil];
     
     self.tableView.dataSource = self;
     
@@ -48,6 +42,7 @@
 
 -(void)requestWithUrl:(NSString *)url
 {
+    NSLog(@"%@",url);
     AFHTTPSessionManager *sessionManager = [AFHTTPSessionManager manager];
     
     NSString *URL = [_titleDic objectForKey:url];
@@ -69,15 +64,21 @@
 
 -(void)setModelWithResponseObject
 {
-    NSDictionary *focusDic = [self.responseObject objectAtIndex:1];
-    NSArray *itemArray = [focusDic objectForKey:@"item"];
+    if (self.responseObject.count != 1){
     
-    self.imageScrollView.contentSize = CGSizeMake(W * [itemArray count], 0);
+        NSDictionary *focusDic = [self.responseObject objectAtIndex:1];
+        NSArray *itemArray = [focusDic objectForKey:@"item"];
+        
+        self.imageScrollView.contentSize = CGSizeMake(W * [itemArray count], 0);
+        
+        self.tableView.tableHeaderView = self.imageScrollView;
     for (int i = 0; i < [itemArray count]; i++)                                                                                                                                                                                           {
         NSString *imageStr = [[itemArray objectAtIndex:i] objectForKey:@"thumbnail"];
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(i * W, 0, W, self.imageScrollView.bounds.size.height)];
         [imageView sd_setImageWithURL:[NSURL URLWithString:imageStr]];
         [self.imageScrollView addSubview:imageView];
+        
+      }
     }
     NSDictionary *commonDic = [self.responseObject objectAtIndex:0];
     NSArray *commonArray = [commonDic objectForKey:@"item"];
@@ -89,9 +90,10 @@
         }
     }
 
-    
-    
 }
+    
+
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -123,10 +125,7 @@
     
 }
 
--(void)setButtonTitle:(NSString *)buttonTitle
-{
-    [self requestWithUrl:buttonTitle];
-}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

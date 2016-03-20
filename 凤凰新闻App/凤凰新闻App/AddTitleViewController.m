@@ -51,11 +51,11 @@
     [self initHeaderView];
     
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"selectedArray"] == nil) {
-        _selectedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"萌物",@"段子",@"哲思",@"直播",@"财经", nil];
+        _selectedArray = [NSMutableArray arrayWithObjects:@"头条",@"娱乐",@"直播",@"财经",@"房产",@"旅游" ,nil];
         
         [[NSUserDefaults standardUserDefaults] setValue:_selectedArray forKey:@"selectedArray"];
         
-        _optionalArray = [NSMutableArray arrayWithObjects:@"科技",@"美女",@"房产",@"国学",@"评论",@"暖新闻",@"旅游",@"公益",@"博报", nil];
+        _optionalArray = [NSMutableArray arrayWithObjects:@"国学",@"评论",@"暖新闻",@"公益",@"博报", nil];
         [[NSUserDefaults standardUserDefaults]setValue:_optionalArray forKey:@"optionalArray"];
         
     }
@@ -106,7 +106,12 @@
     flowLayout.headerReferenceSize = CGSizeMake(0, 30);
     [flowLayout setSectionInset:UIEdgeInsetsMake(20, 20, 20, 20)];
     
-    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 44, W, 0)collectionViewLayout:flowLayout];
+    self.underView = [[UIView alloc]initWithFrame:CGRectMake(0, 44, W, 0)];
+    self.underView.backgroundColor = [UIColor greenColor];
+    self.underView.clipsToBounds = YES;
+    [self.groundView addSubview:self.underView];
+    
+    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 0, W, H - 158)collectionViewLayout:flowLayout];
     
     self.collectionView.backgroundColor = RGBA(240, 240, 240, 1);
     
@@ -120,7 +125,7 @@
     
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header2"];
     
-    [self.groundView addSubview:self.collectionView];
+    [self.underView addSubview:self.collectionView];
     
     
 }
@@ -237,9 +242,9 @@
 
 -(void)upButton:(UIButton *)sender
 {
-    [UIView animateWithDuration:1. animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         
-        self.collectionView.frame = CGRectMake(0, 44, W, 0);
+        self.underView.frame = CGRectMake(0, 44, W, 0);
         
         self.upButton.frame = CGRectMake(0, 44, W, 0);
         

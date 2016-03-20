@@ -24,6 +24,8 @@
 
 @property (nonatomic,strong)UIView *headerView;
 
+@property (nonatomic,strong)UIView *underView;
+
 @property (nonatomic,strong)UIButton *upButton;
 
 @property (nonatomic,strong)NSArray *selectedArray;

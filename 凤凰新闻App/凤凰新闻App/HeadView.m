@@ -132,7 +132,7 @@
             
             [self.delegate setOffsetNumber:(btn.tag - 1000)];
             
-            [self.OtherDelegate setButtonTitle:sender.titleLabel.text];
+            [self.OtherDelegate setButtonTitle:sender.titleLabel.text Tag:sender.tag];
             
         }else{
             

@@ -10,15 +10,60 @@
 
 @interface AudioViewController ()
 
+@property (nonatomic,strong)UIView *underLine;
+
 @end
 
 @implementation AudioViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    
+    
+    
+    
+    
+    
 }
 
+-(void)initWithHeaderView
+{
+    self.headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 160, 44)];
+    self.headerView.backgroundColor = [UIColor grayColor];
+    self.navigationItem.titleView = self.headerView;
+    CGFloat _itemWidth = self.headerView.bounds.size.width / 2;
+    
+    NSArray *titleArray = @[@"视频",@"音频"];
+    for (int i = 0; i < 2; i++) {
+        
+        UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        titleButton.frame = CGRectMake(i * _itemWidth, 0, _itemWidth, 44);
+        
+        [titleButton setTitle:[titleArray objectAtIndex:i] forState:UIControlStateNormal];
+        [titleButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        
+        [titleButton setTitleColor:[UIColor redColor] forState:UIControlStateSelected];
+        
+        [titleButton addTarget:self action:@selector(titleButton:) forControlEvents:UIControlEventTouchUpInside];
+        
+        titleButton.tag = 10000 + i;
+        
+        if (titleButton.tag == 10000) {
+            titleButton.selected = YES;
+            
+        }
+        
+        [self.headerView addSubview:titleButton];
+    }
+    _underLine = [[UIView alloc]initWithFrame:CGRectMake(0, 42, _itemWidth, 2)];
+    
+    _underLine.backgroundColor = [UIColor redColor];
+    
+    
+
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

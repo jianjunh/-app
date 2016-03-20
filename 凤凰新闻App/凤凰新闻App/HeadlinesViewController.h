@@ -12,6 +12,6 @@
 
 @property (nonatomic,strong)NSDictionary *titleDic;
 
-@property (nonatomic,strong)HeadView *headView;
+-(void)requestWithUrl:(NSString *)url;
 
 @end
