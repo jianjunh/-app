@@ -24,16 +24,22 @@
         
         _titleLabel.numberOfLines = 2;
         
+        _titleLabel.textColor = [UIColor blueColor];
+        
         [self.contentView addSubview:_titleLabel];
         
         _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(110, 70, 90, 20)];
         _timeLabel.textAlignment = NSTextAlignmentLeft;
+        
+        _timeLabel.textColor = [UIColor grayColor];
         
         [self.contentView addSubview:_timeLabel];
         
         _commentLabel = [[UILabel alloc]initWithFrame:CGRectMake(W - 100, 70, 70, 20)];
         
         _commentLabel.textAlignment = NSTextAlignmentRight;
+        
+        _commentLabel.textColor = [UIColor grayColor];
         
         [self.contentView addSubview:_commentLabel];
         
@@ -67,11 +73,23 @@
     }else {
         self.commentImageView.hidden = NO;
         self.timeLabel.text = [headlinesModel.updateTime substringWithRange:NSMakeRange(11, 5)];
-        self.timeLabel.textColor = [UIColor blackColor];
+        self.timeLabel.textColor = [UIColor grayColor];
         self.timeLabel.backgroundColor = [UIColor whiteColor];
         self.timeLabel.frame = CGRectMake(110, 70, 90, 20);
     }
-    self.commentLabel.text = headlinesModel.commentsall;
+    if (headlinesModel.commentsall != nil) {
+        
+        
+    }else{
+        [self.commentImageView removeFromSuperview];
+    }
+    if ([headlinesModel.commentsall integerValue] > 10000) {
+        CGFloat comment = [headlinesModel.commentsall floatValue] / 10000;
+
+        self.commentLabel.text = [NSString stringWithFormat:@"%.1f万",comment];
+    }else{
+        self.commentLabel.text = headlinesModel.commentsall;
+    }
 }
 - (void)awakeFromNib {
     // Initialization code

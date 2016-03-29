@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomButton.h"
 @protocol changeArray <NSObject>
 
 @optional
@@ -18,7 +19,7 @@
 
 @property (nonatomic,strong)UIView *groundView;
 
-@property (nonatomic,strong)UIButton *editButton;
+@property (nonatomic,strong)CustomButton *editButton;
 
 @property (nonatomic,strong)UICollectionView *collectionView;
 
@@ -26,7 +27,7 @@
 
 @property (nonatomic,strong)UIView *underView;
 
-@property (nonatomic,strong)UIButton *upButton;
+@property (nonatomic,strong)CustomButton *upButton;
 
 @property (nonatomic,strong)NSArray *selectedArray;
 

@@ -19,6 +19,8 @@
 
 @property (nonatomic,strong)AddTitleViewController *addTitle;
 
+@property (nonatomic,strong)UIView *nightView;
+
 @end
 
 @implementation NewsViewController
@@ -41,7 +43,16 @@
     }
     return _baseScrollView;
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"status"] boolValue] == YES) {
+        self.nightView.backgroundColor = [UIColor blackColor];
+        self.nightView.alpha = 0.5;
+    }else{
+        self.nightView.backgroundColor = [UIColor whiteColor];
+        self.nightView.alpha = 0;
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -49,6 +60,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.navigationController.navigationBarHidden = YES;
+    
     
     
     
@@ -73,6 +85,12 @@
     [self.baseScrollView addSubview:headlines.view];
     
     [headlines requestWithUrl:@"头条"];
+    
+    self.nightView = [[UIView alloc]initWithFrame:self.view.bounds];
+    
+    self.nightView.userInteractionEnabled = NO;
+    
+    [self.view addSubview:self.nightView];
 }
 
 
@@ -111,23 +129,37 @@
 }
 
 
--(void)setButtonTitle:(NSString *)buttonTitle Tag:(NSInteger)tag
+-(void)setButtonTitle:(NSString *)buttonTitle Tag:(NSInteger)tag buttonArray:(NSMutableArray *)buttonArray
 {
-    HeadlinesViewController *headlines = [[HeadlinesViewController alloc]init];
-        
-    [self addChildViewController:headlines];
-    
-    
-    for (int i = 0; i < self.baseScrollView.contentSize.width; i++) {
-        if (i == tag - 1000) {
-            headlines.view.frame = CGRectMake(i * W, 0, W, self.baseScrollView.bounds.size.height);
-            [self.baseScrollView addSubview:headlines.view];
+    if (tag == 1000) {
+        return;
+    }else{
+        self.titleArray = buttonArray;
+        CustomButton *btn = [buttonArray objectAtIndex:tag - 1000];
+        if (btn.isClick == 0) {
+            HeadlinesViewController *headlines = [[HeadlinesViewController alloc]init];
+            
+            [self addChildViewController:headlines];
+            
+            
+            for (int i = 0; i < self.baseScrollView.contentSize.width; i++) {
+                if (i == tag - 1000) {
+                    headlines.view.frame = CGRectMake(i * W, 0, W, self.baseScrollView.bounds.size.height);
+                    [self.baseScrollView addSubview:headlines.view];
+                }
+            }
+            [headlines requestWithUrl:buttonTitle];
+            btn.isClick = 1;
+        }else{
+            return;
         }
+
     }
-    [headlines requestWithUrl:buttonTitle];
+    
+    
 }
 
--(void)plusButton:(UIButton *)sender
+-(void)plusButton:(CustomButton *)sender
 {
     self.addTitle.delegate = self;
     self.addTitle.view.hidden = NO;
@@ -156,8 +188,7 @@
     NSInteger page = scrollView.contentOffset.x / W;
     [self.headView setTitleScrollViewOffsetWithPage:page];
     
-    NSLog(@"%@",[[[NSUserDefaults standardUserDefaults]objectForKey:@"selectedArray"] objectAtIndex:page]);
-    [self setButtonTitle:[[[NSUserDefaults standardUserDefaults]objectForKey:@"selectedArray"] objectAtIndex:page]  Tag:page + 1000];
+    [self setButtonTitle:[[[NSUserDefaults standardUserDefaults]objectForKey:@"selectedArray"] objectAtIndex:page]  Tag:page + 1000 buttonArray:self.titleArray];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -31,10 +31,10 @@
     return _headerView;
 }
 
--(UIButton *)editButton
+-(CustomButton *)editButton
 {
     if (!_editButton) {
-        _editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _editButton = [CustomButton buttonWithType:UIButtonTypeCustom];
     }
     return _editButton;
 }
@@ -120,6 +120,7 @@
     self.collectionView.delegate = self;
     
     [self.collectionView registerClass:[TitleCollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+//    [self.collectionView registerClass:[TitleCollectionViewCell class] forCellWithReuseIdentifier:@"cell1"];
     
     [self.collectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header1"];
     
@@ -130,7 +131,7 @@
     
 }
 
--(void)edit:(UIButton *)sender
+-(void)edit:(CustomButton *)sender
 {
     sender.selected = !sender.selected;
 }
@@ -181,9 +182,12 @@
     if(indexPath.section == 0){
         if (indexPath.row == 0) {
             cell.titleLabel.textColor = [UIColor redColor];
+        }else{
+            cell.titleLabel.textColor = [UIColor blackColor];
         }
         cell.titleLabel.text = [[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedArray"] objectAtIndex:indexPath.row];
     }else{
+        cell.titleLabel.textColor = [UIColor blackColor];
         cell.titleLabel.text = [[[NSUserDefaults standardUserDefaults] objectForKey:@"optionalArray"] objectAtIndex:indexPath.row];
         
     }
@@ -227,7 +231,7 @@
 
 -(void)initUpButton
 {
-    self.upButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.upButton = [CustomButton buttonWithType:UIButtonTypeCustom];
     
     self.upButton.backgroundColor = RGBA(240, 240, 240, 1);
     
@@ -240,7 +244,7 @@
     [self.groundView addSubview:self.upButton];
 }
 
--(void)upButton:(UIButton *)sender
+-(void)upButton:(CustomButton *)sender
 {
     [UIView animateWithDuration:0.5 animations:^{
         

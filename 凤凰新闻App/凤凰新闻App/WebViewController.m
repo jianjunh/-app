@@ -12,6 +12,8 @@
 #import "UMSocial.h"
 @interface WebViewController ()<UMSocialUIDelegate>
 
+@property (nonatomic,strong)UIView *nightView;
+
 @end
 
 @implementation WebViewController
@@ -20,6 +22,7 @@
 {
     if (self) {
         _urlStr = url;
+        
     }
     return self;
 }
@@ -32,9 +35,24 @@
     }
     return _webView;
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+    NSLog(@"%d",[[[NSUserDefaults standardUserDefaults]objectForKey:@"status"] boolValue]);
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"status"] boolValue] == YES) {
+        self.nightView.backgroundColor = [UIColor blackColor];
+        self.nightView.alpha = 0.5;
+    }else{
+        self.nightView.backgroundColor = [UIColor whiteColor];
+        self.nightView.alpha = 0;
+    }
+    
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.view.backgroundColor = [UIColor whiteColor];
     NSURL *url = [NSURL URLWithString:self.urlStr];
     
@@ -62,6 +80,12 @@
     [shareButton setImage:[UIImage imageNamed:@"新分享.png"] forState:UIControlStateNormal];
     [shareButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
     [downView addSubview:shareButton];
+    
+    self.nightView = [[UIView alloc]initWithFrame:self.view.bounds];
+    
+    self.nightView.userInteractionEnabled = NO;
+    
+    [self.view addSubview:self.nightView];
     
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomButton.h"
 @protocol changeScrollViewOffset <NSObject>
 
 @optional
@@ -19,17 +20,17 @@
 
 @optional
 
--(void)setButtonTitle:(NSString *)buttonTitle Tag:(NSInteger)tag;
+-(void)setButtonTitle:(NSString *)buttonTitle Tag:(NSInteger)tag buttonArray:(NSMutableArray *)buttonArray;
 
 @end
 
 @interface HeadView : UIView
 
-@property (nonatomic,strong)UIButton *button24;
+@property (nonatomic,strong)CustomButton *button24;
 
 @property (nonatomic,strong)UIScrollView *titleScrollView;
 
-@property (nonatomic,strong)UIButton *plusButton;
+@property (nonatomic,strong)CustomButton *plusButton;
 
 @property (nonatomic,strong)NSMutableArray *buttonArray;
 

@@ -12,6 +12,12 @@
 
 @property (nonatomic,strong)UIScrollView *imageScrollView;
 
+@property (nonatomic,strong)UILabel *titleLabel;
+
 @property (nonatomic,strong)UITableView *tableView;
+
+@property (nonatomic,strong)UILabel *currentPage;
+
+@property (nonatomic,strong)UILabel *totalPage;
 
 @end

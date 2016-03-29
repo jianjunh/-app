@@ -7,7 +7,7 @@
 //
 
 #import "AudioViewController.h"
-
+#import "CustomButton.h"
 @interface AudioViewController ()
 
 @property (nonatomic,strong)UIView *underLine;
@@ -37,7 +37,7 @@
     NSArray *titleArray = @[@"视频",@"音频"];
     for (int i = 0; i < 2; i++) {
         
-        UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        CustomButton *titleButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         
         titleButton.frame = CGRectMake(i * _itemWidth, 0, _itemWidth, 44);
         

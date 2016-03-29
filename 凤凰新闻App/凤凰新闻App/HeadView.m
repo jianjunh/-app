@@ -8,6 +8,7 @@
 
 #import "HeadView.h"
 #import "Header.h"
+#import "CustomButton.h"
 @implementation HeadView
 {
     
@@ -17,9 +18,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _button24 = [UIButton buttonWithType:UIButtonTypeCustom];
+        _button24 = [CustomButton buttonWithType:UIButtonTypeCustom];
         
-        _plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _plusButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         
         _titleScrollView = [[UIScrollView alloc]initWithFrame:CGRectZero];
         
@@ -80,7 +81,7 @@
         
     for (int i = 0; i < [titleArray count]; i++) {
             
-        UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        CustomButton *titleButton = [CustomButton buttonWithType:UIButtonTypeCustom];
         
         titleButton.frame = CGRectMake(i * _itemWidth, 0, _itemWidth, 44);
         
@@ -114,16 +115,15 @@
 }
 
 
--(void)button24Click:(UIButton *)sender
+-(void)button24Click:(CustomButton *)sender
 {
     
 }
 
 
--(void)titleButton:(UIButton *)sender
+-(void)titleButton:(CustomButton *)sender
 {
-    
-    for (UIButton *btn in self.buttonArray) {
+    for (CustomButton *btn in self.buttonArray) {
         if (sender.tag == btn.tag) {
             
             btn.selected = YES;
@@ -132,7 +132,7 @@
             
             [self.delegate setOffsetNumber:(btn.tag - 1000)];
             
-            [self.OtherDelegate setButtonTitle:sender.titleLabel.text Tag:sender.tag];
+            [self.OtherDelegate setButtonTitle:sender.titleLabel.text Tag:sender.tag buttonArray:self.buttonArray];
             
         }else{
             
@@ -140,12 +140,25 @@
             
         }
     }
+    if (sender.tag > 1002) {
+        NSInteger k = (int)sender.tag - 1002;
+        if(sender.tag + 3 >= 1000 + [_buttonArray count]){
+            k = [_buttonArray count] - 5;
+            [self.titleScrollView setContentOffset:CGPointMake(k * _itemWidth, 0) animated:YES];
+        }else{
+            
+            [self.titleScrollView setContentOffset:CGPointMake(k * _itemWidth , 0) animated:YES];
+        }
+    }else{
+        [self.titleScrollView setContentOffset:CGPointMake(0 , 0) animated:YES];
+    }
+
 }
 
 -(void)setTitleScrollViewOffsetWithPage:(NSInteger)page
 {
     
-    for (UIButton *btn in self.buttonArray) {
+    for (CustomButton *btn in self.buttonArray) {
         if (btn.tag == page + 1000) {
             
             btn.selected = YES;
